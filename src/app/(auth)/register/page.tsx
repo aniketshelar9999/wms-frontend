@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 
 export default function RegisterPage() {
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -57,7 +59,7 @@ export default function RegisterPage() {
             }
 
             setMessage("Registration successful! Redirecting...");
-            setTimeout(() => router.push("/login"), 1500);
+            router.push("/login");
         } catch (error) {
             setMessage("Something went wrong. Try again.");
         }
@@ -65,9 +67,14 @@ export default function RegisterPage() {
         setLoading(false);
 
     }
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    if (!mounted) return null;
 
 
     return (
+
         <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7]">
             <div className="w-full max-w-md bg-white rounded-2xl p-10 border border-[#E5E5E7]">
                 <h1 className="text-3xl font-semibold text-gray-900 mb-8 tracking-tight">

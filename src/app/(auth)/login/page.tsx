@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -37,22 +37,28 @@ export default function LoginPage() {
         setLoading(true);
         setMessage("");
         try {
+            setLoading(true);
+            setMessage("");
             const res = await fetch("http://localhost:3000/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
                 credentials: "include",
             });
-            const data = await res.json();
+            let data: any = {};
+            try {
+                data = await res.json();
+            } catch {
+                data = { message: "Invalid server response" };
+            }
             if (!res.ok) {
                 setMessage(data.message || "Login failed");
+                setLoading(false);
                 return;
             }
-            setLoading(true);
-            setMessage(data.message);
-            // setTimeout(() => {
             router.push("/dashboard");
-            // }, 1500);
+            return;
+
         } catch (error) {
             setMessage("An error occurred while logging in.");
         } finally {
@@ -67,6 +73,7 @@ export default function LoginPage() {
     if (!mounted) return null;
 
     return (
+
         <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7]">
             <div className="w-full max-w-md bg-white rounded-2xl p-10 border border-[#E5E5E7]">
                 <h1 className="text-3xl font-semibold text-gray-900 mb-8 tracking-tight">
@@ -128,16 +135,16 @@ export default function LoginPage() {
                 <div className="mt-4 text-center">
                     <p className="text-sm text-gray-600">
                         Don’t have an account?{" "}
-                        <a
-                            href="/register"
-                            className="text-green-600 font-medium hover:underline"
-                        >
+                        <Link href="/register" className="text-green-600 font-medium hover:underline">
                             Register
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>
 
         </div>
+
+
+
     )
 }
