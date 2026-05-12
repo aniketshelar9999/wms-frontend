@@ -56,6 +56,8 @@ export default function LoginPage() {
                 setLoading(false);
                 return;
             }
+            localStorage.setItem("accessToken", data.accessToken);
+            setMessage(data.message);
             router.push("/dashboard");
             return;
 

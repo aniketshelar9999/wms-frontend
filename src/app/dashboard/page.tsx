@@ -1,13 +1,27 @@
 "use client";
 
-export default function DashboardPage() {
-    return (
-        <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Welcome to Manager Dashboard</h1>
+import { useEffect } from "react";
+import useUser from "../../hooks/useUser";
+import { useRouter } from "next/navigation";
 
-            <p className="mt-4 text-gray-700">
-                This is where your analytics, inventory stats, and quick actions will appear.
-            </p>
-        </div>
-    );
+type User = { name: string };
+
+export default function DashboardPage() {
+
+    const { user, loading } = useUser() as { user: User | null; loading: boolean };
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push("/login");
+        }
+    }, [loading, user, router]);
+
+    if (loading) return <p>Loading...</p>;
+
+    if (!user) return null;
+
+
+    return <h1>Welcome {user.name}</h1>;
 }

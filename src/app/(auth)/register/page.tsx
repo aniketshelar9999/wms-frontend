@@ -57,8 +57,7 @@ export default function RegisterPage() {
                 setLoading(false);
                 return;
             }
-
-            setMessage("Registration successful! Redirecting...");
+            setMessage(data.message);
             router.push("/login");
         } catch (error) {
             setMessage("Something went wrong. Try again.");
