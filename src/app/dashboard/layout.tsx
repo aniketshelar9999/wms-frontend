@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useUser from "../../hooks/useUser";
 import useLogout from "../../hooks/useLogout";
+import Link from "next/link";
+import ConfirmModal from "@/src/components/ConfirmModal";
+
+
 
 interface User {
     id: string;
@@ -18,6 +22,7 @@ interface Props {
 export default function DashboardLayout({ children }: Props) {
     const logout = useLogout();
     const [open, setOpen] = useState(true);
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const router = useRouter();
 
     const { user, loading } = useUser() as { user: User | null; loading: boolean };
@@ -45,23 +50,24 @@ export default function DashboardLayout({ children }: Props) {
                 </div>
 
                 <nav className="mt-6 space-y-2 px-4">
-                    <a className="block p-3 rounded-lg hover:bg-gray-100">Dashboard</a>
-                    <a className="block p-3 rounded-lg hover:bg-gray-100">Inventory</a>
+                    <Link href="/dashboard" className="block p-3 rounded-lg hover:bg-gray-100">Dashboard</Link >
 
                     {/* Manager-only */}
                     {user.role === "manager" && (
                         <>
-                            <a className="block p-3 rounded-lg hover:bg-gray-100">Suppliers</a>
-                            <a className="block p-3 rounded-lg hover:bg-gray-100">Brands</a>
-                            <a className="block p-3 rounded-lg hover:bg-gray-100">Users</a>
+                            <Link href="/dashboard/brands" className="block p-3 rounded-lg hover:bg-gray-100">Brands</Link >
+                            <Link href="/dashboard/suppliers" className="block p-3 rounded-lg hover:bg-gray-100">Suppliers</Link >
+                            <Link href="/dashboard/categories" className="block p-3 rounded-lg hover:bg-gray-100">Categories</Link >
+                            <Link href="/dashboard/products" className="block p-3 rounded-lg hover:bg-gray-100">Products</Link >
+                            <Link href="/dashboard/users" className="block p-3 rounded-lg hover:bg-gray-100">Users</Link >
                         </>
                     )}
 
                     {/* User-only */}
                     {user.role === "employee" && (
                         <>
-                            <a className="block p-3 rounded-lg hover:bg-gray-100">My Tasks</a>
-                            <a className="block p-3 rounded-lg hover:bg-gray-100">My Shifts</a>
+                            <Link href="/dashboard/my-tasks" className="block p-3 rounded-lg hover:bg-gray-100">My Tasks</Link >
+                            <Link href="/dashboard/my-shifts" className="block p-3 rounded-lg hover:bg-gray-100">My Shifts</Link >
                         </>
                     )}
                 </nav>
@@ -78,11 +84,22 @@ export default function DashboardLayout({ children }: Props) {
 
                     <div className="flex items-center gap-4">
                         <span className="text-gray-600">Hello, {user.name}</span>
-                        <button onClick={() => logout(user.id)} className="bg-red-500 text-white px-4 py-2 rounded-lg">
+                        <button
+                            onClick={() => setConfirmOpen(true)}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                        >
                             Logout
                         </button>
                     </div>
                 </header>
+                <ConfirmModal
+                    open={confirmOpen}
+                    onCancel={() => setConfirmOpen(false)}
+                    onConfirm={() => {
+                        setConfirmOpen(false);
+                        logout(user.id);
+                    }}
+                />
 
                 <main className="p-6">{children}</main>
             </div>
