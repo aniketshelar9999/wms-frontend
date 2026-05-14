@@ -6,8 +6,8 @@ import useUser from "../../hooks/useUser";
 import useLogout from "../../hooks/useLogout";
 import Link from "next/link";
 import ConfirmModal from "@/src/components/ConfirmModal";
-
-
+import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 interface User {
     id: string;
@@ -20,10 +20,12 @@ interface Props {
 }
 
 export default function DashboardLayout({ children }: Props) {
+    const pathname = usePathname();
     const logout = useLogout();
     const [open, setOpen] = useState(true);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const router = useRouter();
+    const isActive = (path: string) => pathname === path;
 
     const { user, loading } = useUser() as { user: User | null; loading: boolean };
 
@@ -40,9 +42,17 @@ export default function DashboardLayout({ children }: Props) {
             {/* Sidebar */}
             <aside className={`${open ? "w-64" : "w-20"} bg-white border-r`}>
                 <div className="p-4 flex items-center justify-between">
-                    <h1 className="text-xl font-semibold text-gray-800">
+                    {/* <h1 className="text-xl font-semibold text-gray-800">
                         {open ? "WMS" : "WM"}
-                    </h1>
+                    </h1> */}
+                    <Image
+                        src="/wms.png"
+                        alt="WMS Logo"
+                        width={open ? 140 : 50}
+                        height={40}
+                        className="object-contain transition-all duration-300"
+                        priority
+                    />
 
                     <button onClick={() => setOpen(!open)}>
                         {open ? "◀" : "▶"}
@@ -50,24 +60,46 @@ export default function DashboardLayout({ children }: Props) {
                 </div>
 
                 <nav className="mt-6 space-y-2 px-4">
-                    <Link href="/dashboard" className="block p-3 rounded-lg hover:bg-gray-100">Dashboard</Link >
+                    <Link href="/dashboard"
+                        className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard") ? "bg-gray-200" : ""}`}>
+                        Dashboard
+                    </Link>
 
                     {/* Manager-only */}
                     {user.role === "manager" && (
                         <>
-                            <Link href="/dashboard/brands" className="block p-3 rounded-lg hover:bg-gray-100">Brands</Link >
-                            <Link href="/dashboard/suppliers" className="block p-3 rounded-lg hover:bg-gray-100">Suppliers</Link >
-                            <Link href="/dashboard/categories" className="block p-3 rounded-lg hover:bg-gray-100">Categories</Link >
-                            <Link href="/dashboard/products" className="block p-3 rounded-lg hover:bg-gray-100">Products</Link >
-                            <Link href="/dashboard/users" className="block p-3 rounded-lg hover:bg-gray-100">Users</Link >
+                            <Link href="/dashboard/brands"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/brands") ? "bg-gray-200" : ""}`}>
+                                Brands
+                            </Link>
+                            <Link href="/dashboard/suppliers"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/suppliers") ? "bg-gray-200" : ""}`}>
+                                Suppliers
+                            </Link>
+                            <Link href="/dashboard/categories"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/categories") ? "bg-gray-200" : ""}`}>
+                                Categories
+                            </Link>
+                            <Link href="/dashboard/products"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/products") ? "bg-gray-200" : ""}`}>
+                                Products
+                            </Link>
+                            <Link href="/dashboard/users"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/users") ? "bg-gray-200" : ""}`}>
+                                Users
+                            </Link>
                         </>
                     )}
 
                     {/* User-only */}
                     {user.role === "employee" && (
                         <>
-                            <Link href="/dashboard/my-tasks" className="block p-3 rounded-lg hover:bg-gray-100">My Tasks</Link >
-                            <Link href="/dashboard/my-shifts" className="block p-3 rounded-lg hover:bg-gray-100">My Shifts</Link >
+                            <Link href="/dashboard/my-tasks" className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/my-tasks") ? "bg-gray-200" : ""}`}>
+                                My Tasks
+                            </Link>
+                            <Link href="/dashboard/my-shifts" className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/my-shifts") ? "bg-gray-200" : ""}`}>
+                                My Shifts
+                            </Link>
                         </>
                     )}
                 </nav>
@@ -83,7 +115,7 @@ export default function DashboardLayout({ children }: Props) {
                     </h2>
 
                     <div className="flex items-center gap-4">
-                        <span className="text-gray-600">Hello, {user.name}</span>
+                        {/* <span className="text-gray-600">Hello, {user.name}</span> */}
                         <button
                             onClick={() => setConfirmOpen(true)}
                             className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
