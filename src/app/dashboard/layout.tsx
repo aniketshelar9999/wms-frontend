@@ -68,6 +68,10 @@ export default function DashboardLayout({ children }: Props) {
                     {/* Manager-only */}
                     {user.role === "manager" && (
                         <>
+                            <Link href="/dashboard/categories"
+                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/categories") ? "bg-gray-200" : ""}`}>
+                                Categories
+                            </Link>
                             <Link href="/dashboard/brands"
                                 className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/brands") ? "bg-gray-200" : ""}`}>
                                 Brands
@@ -75,10 +79,6 @@ export default function DashboardLayout({ children }: Props) {
                             <Link href="/dashboard/suppliers"
                                 className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/suppliers") ? "bg-gray-200" : ""}`}>
                                 Suppliers
-                            </Link>
-                            <Link href="/dashboard/categories"
-                                className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/categories") ? "bg-gray-200" : ""}`}>
-                                Categories
                             </Link>
                             <Link href="/dashboard/products"
                                 className={`block p-3 rounded-lg hover:bg-gray-100 ${isActive("/dashboard/products") ? "bg-gray-200" : ""}`}>
