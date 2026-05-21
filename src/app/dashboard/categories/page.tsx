@@ -66,10 +66,8 @@ export default function CategoriesTable() {
         setPage(newPage);
     };
 
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setRowsPerPage(+event.target.value);
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
     const handleCreate = async () => {
@@ -124,9 +122,20 @@ export default function CategoriesTable() {
             if (!res.ok) {
                 throw new Error("Failed to delete category");
             }
+            // Update UI list
+            setCategories((prev) => {
+                const updated = prev.filter((cat) => cat.id !== id);
 
-            // Remove from UI
-            setCategories((prev) => prev.filter((cat) => cat.id !== id));
+                // If current page becomes empty, go back one page
+                const maxPage = Math.max(0, Math.ceil(updated.length / rowsPerPage) - 1);
+
+                if (page > maxPage) {
+                    setPage(maxPage);
+                }
+
+                return updated;
+            });
+
 
         } catch (error) {
             console.error("Delete error:", error);
@@ -176,8 +185,8 @@ export default function CategoriesTable() {
                         Categories
                     </Typography>
 
-                    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-                        <TableContainer sx={{ maxHeight: 420 }}>
+                    <Paper sx={{ width: "100%", overflow: "auto" }}>
+                        <TableContainer sx={{ maxHeight: 440 }}>
                             <Table stickyHeader>
                                 <TableHead>
                                     <TableRow >

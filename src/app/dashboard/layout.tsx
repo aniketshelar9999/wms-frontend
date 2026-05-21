@@ -1,5 +1,6 @@
 "use client";
 
+import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useUser from "../../hooks/useUser";
@@ -38,7 +39,7 @@ export default function DashboardLayout({ children }: Props) {
 
     return (
         <div className="flex min-h-screen bg-[#F5F5F7]">
-
+            <Toaster position="top-right" />
             {/* Sidebar */}
             <aside className={`${open ? "w-64" : "w-20"} bg-white border-r`}>
                 <div className="p-4 flex items-center justify-between">
