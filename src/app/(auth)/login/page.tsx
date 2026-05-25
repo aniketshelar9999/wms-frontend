@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -56,7 +57,9 @@ export default function LoginPage() {
                 setLoading(false);
                 return;
             }
+            toast.success("Login successful");
             localStorage.setItem("accessToken", data.accessToken);
+            toast.success("Login successful");
             setMessage(data.message);
             router.push("/dashboard");
             return;
